@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Post Food - Leftover Link{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <h2>Post New Leftover Food</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="food_name">Food Name:</label>
+        <input type="text" id="food_name" name="food_name" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="quantity">Quantity (e.g., "Serves 5", "3 boxes"):</label>
+        <input type="text" id="quantity" name="quantity" required>
+
+        <label for="phone_number">Contact Phone Number:</label>
+        <input type="tel" id="phone_number" name="phone_number" required>
+
+        <label for="image">Upload Photo:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+
+        <label>Drag the pin to the exact pickup location:</label>
+        <div id="map" data-api-key="{{ GOOGLE_API_KEY }}" style="height: 300px; width: 100%; border: 1px solid #ccc; margin-top: 10px; border-radius: 8px;"></div>
+        <br>
+
+        <label for="city">Pickup City:</label>
+        <input type="text" id="city" name="city" placeholder="City will appear here..." readonly required>
+        
+        <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lon" name="lon">
+
+        <button type="submit">Post Food</button>
+    </form>
+{% endblock %}

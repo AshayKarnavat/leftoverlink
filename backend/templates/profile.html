@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+    <div class="profile-header">
+        <h1>{{ user.username }}'s Profile</h1>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-section">
+            <h2>Donation Stats</h2>
+            <div class="stat-item">
+                <span>Food Shared</span>
+                <span class="stat-value">{{ total_donations }}</span>
+            </div>
+            <div class="stat-item">
+                <span>Successful Pickups</span>
+                <span class="stat-value">{{ successful_pickups }}</span>
+            </div>
+            <div class="stat-item">
+                <span>Currently Available</span>
+                <span class="stat-value">{{ currently_available }}</span>
+            </div>
+            <div class="stat-item">
+                <span>Food Claimed</span>
+                <span class="stat-value">{{ food_claimed }}</span>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>User Rating</h2>
+            {% if user.num_ratings > 0 %}
+                <div class="overall-rating">
+                    {% set rounded_rating = (user.avg_rating|round(0, 'floor')|int) %}
+                    <span class="stars">{{ '⭐' * rounded_rating }}{{ '☆' * (5 - rounded_rating) }}</span>
+                    <span class="avg-rating-text">{{ user.avg_rating }}/5.0 from {{ user.num_ratings }} ratings</span>
+                </div>
+                <div class="rating-breakdown">
+                    {% for i in range(5, 0, -1) %}
+                        <div class="rating-row">
+                            <span class="star-label">{{ i }} star</span>
+                            <div class="rating-bar-bg">
+                                <div class="rating-bar-fg" style="width: {{ (rating_counts[i] / user.num_ratings) * 100 }}%;"></div>
+                            </div>
+                            <span class="rating-count">{{ rating_counts[i] }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No ratings yet.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

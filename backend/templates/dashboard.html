@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>My Dashboard</h1>
+        <form action="{{ url_for('logout') }}" method="get" class="form-link">
+            <button type="submit" class="btn-link-secondary">Logout</button>
+        </form>
+    </div>
+    <hr>
+
+    <div class="profile-container">
+        <div class="profile-section">
+            <h2>Donation Stats</h2>
+            <div class="stat-item">
+                <span>Food Shared</span>
+                <span class="stat-value">{{ total_donations }}</span>
+            </div>
+            <div class="stat-item">
+                <span>Successful Pickups</span>
+                <span class="stat-value">{{ successful_pickups }}</span>
+            </div>
+            <div class="stat-item">
+                <span>Currently Available</span>
+                <span class="stat-value">{{ currently_available }}</span>
+            </div>
+            <div class="stat-item">
+                <span>Food Claimed</span>
+                <span class="stat-value">{{ food_claimed }}</span>
+            </div>
+        </div>
+        <div class="profile-section">
+            <h2>Your Rating</h2>
+            {% if current_user.num_ratings > 0 %}
+                <div class="overall-rating">
+                    {% set rounded_rating = (current_user.avg_rating|round(0, 'floor')|int) %}
+                    <span class="stars">{{ '⭐' * rounded_rating }}{{ '☆' * (5 - rounded_rating) }}</span>
+                    <span class="avg-rating-text">{{ current_user.avg_rating }}/5.0 from {{ current_user.num_ratings }} ratings</span>
+                </div>
+                <div class="rating-breakdown">
+                    {% for i in range(5, 0, -1) %}
+                        <div class="rating-row">
+                            <span class="star-label">{{ i }} star</span>
+                            <div class="rating-bar-bg">
+                                <div class="rating-bar-fg" style="width: {{ (rating_counts[i] / current_user.num_ratings) * 100 }}%;"></div>
+                            </div>
+                            <span class="rating-count">{{ rating_counts[i] }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No ratings yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <h2>My Food Donations & Incoming Requests</h2>
+    <div class="post-container">
+        {% if my_posts %}
+            {% for post in my_posts %}
+                <div class="post-card">
+                    <h3>{{ post.food_name }}</h3>
+                    <p>Status: <strong>{{ post.status.capitalize() }}</strong></p>
+                    {% if post.status == 'available' %}
+                        <a href="{{ url_for('edit_post', post_id=post.id) }}" id="edit-post-anchor">Edit</a> |
+                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post?');" class="form-link">
+                            <button type="submit" class="btn-link-delete">Delete</button>
+                        </form>
+                    {% else %}
+                        <p><em>(This post is locked because it has been claimed.)</em></p>
+                    {% endif %}
+                    
+                    <h4>Requests Received:</h4>
+                    {% if post.requests %}
+                        <ul>
+                        {% for req in post.requests %}
+                            <li>
+                                Request from <strong><a href="{{ url_for('profile', username=req.requester.username) }}" class="posted-by-anchor">{{ req.requester.username }}</a></strong>
+                                {% if req.status == 'pending' %}
+                                    <a href="{{ url_for('handle_request', request_id=req.id, action='accept') }}" id="accept-anchor">Accept</a> |
+                                    <a href="{{ url_for('handle_request', request_id=req.id, action='decline') }}" id="decline-anchor">Decline</a>
+                                {% endif %}
+                                {% if req.status == 'accepted' %}
+                                    {% set user_rating = namespace(value=None) %}{% for rating in req.requester.ratings_given %}{% if rating.request_id == req.id %}{% set user_rating.value = rating %}{% endif %}{% endfor %}
+                                    {% if user_rating.value %}
+                                        <br><span style="color: #ffc107; font-size: 0.9em;">Rating Received: {{ '⭐' * user_rating.value.score }}{{ '☆' * (5 - user_rating.value.score) }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No requests for this item yet.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't posted any food yet.</p>
+        {% endif %}
+    </div>
+
+    <hr>
+    <h2>My Pickup Requests</h2>
+    <div class="post-container">
+        {% if my_requests %}
+            {% for req in my_requests %}
+                <div class="post-card">
+                    <h3>{{ req.food_post.food_name }}</h3>
+                    <p>Status: <strong>{{ req.status }}</strong></p>
+                    {% if req.status == 'accepted' %}
+                        <p>Donor: <strong><a href="{{ url_for('profile', username=req.food_post.author.username) }}" class="posted-by-anchor">{{ req.food_post.author.username }}</a></strong></p>
+                        <p>Contact Donor at: <strong>{{ req.food_post.phone_number }}</strong></p>
+                        <hr>
+                        {% set user_rating = namespace(value=None) %}{% for rating in current_user.ratings_given %}{% if rating.request_id == req.id %}{% set user_rating.value = rating %}{% endif %}{% endfor %}
+                        {% if user_rating.value %}
+                            <h4>Your Rating:</h4>
+                            <p style="font-size: 1.2em; color: #ffc107;">{{ '⭐' * user_rating.value.score }}{{ '☆' * (5 - user_rating.value.score) }}</p>
+                        {% else %}
+                            <h4>Rate this pickup:</h4>
+                            <form action="{{ url_for('submit_rating', request_id=req.id) }}" method="POST" class="form-link">
+                                <select name="score" required><option value="5">5 - Excellent ⭐⭐⭐⭐⭐</option><option value-="4">4 - Good ⭐⭐⭐⭐</option><option value="3">3 - Average ⭐⭐⭐</option><option value="2">2 - Poor ⭐⭐</option><option value="1">1 - Very Poor ⭐</option></select>
+                                <button type="submit">Submit Rating</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't requested any food yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

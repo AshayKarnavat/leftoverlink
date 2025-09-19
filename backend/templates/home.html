@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Leftover Link{% endblock %}
+
+{% block content %}
+    <h2>Welcome, {{ username }}!</h2>
+    <p>This is your dashboard. You can post leftover food or search for available food nearby.</p>
+
+    <hr>
+
+    <h3>All Available Food</h3>
+    <div id="all-posts-container" class="post-container">
+        {% if posts %}
+            {% for post in posts %}
+                <a href="{{ url_for('post_details', post_id=post.id) }}" class="post-card-link">
+                    <div class="post-card">
+                        <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" alt="{{ post.food_name }}">
+                        <h3>{{ post.food_name }}</h3>
+                        <p class="post-description">{{ post.description }}</p>
+                        <p><strong>Quantity:</strong> {{ post.quantity }}</p>
+                        <p><strong>Location:</strong> {{ post.city }}</p>
+                        <p class="posted-by">Posted by: <a href="{{ url_for('profile', username=post.author.username) }}" class="posted-by-anchor">{{ post.author.username }}</a></p>
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>No food has been posted yet. Be the first!</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.food_name }} - Leftover Link{% endblock %}
+
+{% block content %}
+    <div class="details-container">
+        <div class="details-image">
+            <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" alt="{{ post.food_name }}">
+        </div>
+        <div class="details-info">
+            <h1>{{ post.food_name }}</h1>
+            <p class="posted-by">Posted by: <a href="{{ url_for('profile', username=post.author.username) }}" class="posted-by-anchor">{{ post.author.username }}</a> in {{ post.city }}</p>
+            <hr>
+            <h3>Description</h3>
+            <p>{{ post.description }}</p>
+            <h3>Quantity</h3>
+            <p>{{ post.quantity }}</p>
+
+            {% if current_user.is_authenticated and current_user.id != post.author.id %}
+                <form style="margin-bottom: 8px" action="{{ url_for('request_food', post_id=post.id) }}" class="form-link" method="POST">
+                    <button type="submit">Request Pickup</button>
+                </form>
+            {% endif %}
+
+            <a href="https://www.google.com/maps?q={{ post.lat }},{{ post.lon }}" target="_blank" class="button">View on Map</a>
+        </div>
+    </div>
+{% endblock %}

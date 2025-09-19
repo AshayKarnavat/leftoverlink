@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Search Nearby - Leftover Link{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <h2>Find Food Near You</h2>
+    <p>Drag the pin to the location you want to search from.</p>
+    
+    <div id="search-map" data-api-key="{{ GOOGLE_API_KEY }}" style="height: 350px; width: 100%; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px;"></div>
+
+    <div class="search-controls">
+        <label for="radius-slider">Within:</label>
+        <input type="range" id="radius-slider" min="1" max="100" value="5">
+        <input type="number" id="radius" min="1" max="100" value="5" style="width: 60px;">
+        <span>km</span>
+        <button id="find-nearby-btn">Find Now</button>
+    </div>
+
+    <div id="nearby-posts-container" class="post-container"></div>
+{% endblock %}
