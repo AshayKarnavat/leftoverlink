@@ -12,7 +12,7 @@ load_dotenv()
 from models import db, User, FoodPost, Request, Rating
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '9a-ve96rys97ecret-7ky-tru34--336s-i3s-sa43646fe'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
     # Use the Render PostgreSQL database

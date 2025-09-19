@@ -1,1 +1,1 @@
-gunicorn --chdir backend app:create_app
+gunicorn app:app
