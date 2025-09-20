@@ -54,6 +54,20 @@ def home():
         return render_template("home.html", username=current_user.username, posts=posts)
     return redirect(url_for("login"))
 
+# In backend/app.py
+
+# --- ADD THIS TEMPORARY ROUTE AT THE BOTTOM ---
+@app.route('/create-tables-9876543210')
+def create_tables():
+    try:
+        with app.app_context():
+            db.create_all()
+        return "Database tables created successfully!", 200
+    except Exception as e:
+        return f"An error occurred: {e}", 500
+
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
