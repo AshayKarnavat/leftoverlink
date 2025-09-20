@@ -466,6 +466,14 @@ def submit_rating(request_id):
     flash("Thank you for your feedback!", "success")
     return redirect(url_for('dashboard'))
 
+@app.route('/create-tables-9876543210')
+def create_tables():
+    try:
+        with app.app_context():
+            db.create_all()
+        return "Database tables created successfully!", 200
+    except Exception as e:
+        return f"An error occurred: {e}", 500
 # ---
 
 if __name__ == "__main__":
