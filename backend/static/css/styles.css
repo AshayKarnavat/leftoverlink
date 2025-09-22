@@ -1,28 +1,36 @@
-/* --- Unified Dark Emerald Theme --- */
+/* --- White & Charcoal Minimalist Theme --- */
 
 /* --- Color Variables --- */
 :root {
-    --main-bg: #0b1a0e;          /* Background gradient base */
-    --main-bg-gradient: linear-gradient(#0b1a0e, #0f261b, #0d1c12);
-    --card-bg: #0f261b;          /* Slightly lighter for cards/forms */
-    --input-bg: #0d1c12;         /* Input background */
-    --hover-bg: #132918;         /* Hover for buttons/cards */
-    --text-color: #d1f2eb;       /* Light text */
-    --border-color: #1a3324;     /* Subtle border */
-    --shadow-color: rgba(0,0,0,0.7);  /* Shadows */
-    --alert-success-bg: #1b3a27;
-    --alert-success-border: #154021;
-    --alert-error-bg: #4c1a1a;
-    --alert-error-border: #611a1a;
-    --alert-info-bg: #0d2a3c;
-    --alert-info-border: #0b3e5c;
+    --main-bg: #FFFFFF;
+    --card-bg: #F5F5F5;
+    --input-bg: #FFFFFF;
+    --hover-bg: #E0E0E0;
+    --text-color: #222222;
+    --border-color: #DDDDDD;
+    --shadow-color: rgba(0,0,0,0.1);
+
+    /* Alert and button colors */
+    --alert-success-bg: #D4EDDA;
+    --alert-success-border: #C3E6CB;
+    --alert-error-bg: #F8D7DA;
+    --alert-error-border: #F5C6CB;
+    --alert-info-bg: #D1ECF1;
+    --alert-info-border: #BEE5EB;
+    
+    /* Link and button colors for better visual hierarchy */
+    --link-color: #007BFF;
+    --link-hover-color: #0056b3;
+    --delete-color: #DC3545;
+    --accept-color: #28A745;
+    --decline-color: #DC3545;
 }
 
 /* --- Body & Container --- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     margin: 0;
-    background: var(--main-bg-gradient);
+    background: var(--main-bg);
     color: var(--text-color);
     line-height: 1.6;
 
@@ -36,7 +44,7 @@ body {
 
 /* --- Navigation Bar --- */
 .navbar {
-    background: var(--card-bg);
+    background: var(--main-bg);
     box-shadow: 0 2px 6px var(--shadow-color);
     padding: 1rem 2rem;
     position: sticky;
@@ -78,7 +86,7 @@ body {
 }
 
 .nav-menu a:hover {
-    background-color:rgb(8, 94, 8);
+    background-color: var(--hover-bg);
 }
 
 /* --- Forms & Inputs --- */
@@ -113,10 +121,10 @@ select {
 button:not(.btn-link-delete,.hamburger-btn),
 a.button,
 .donation-btn {
-    background: var(--card-bg);
-    color: var(--text-color);
+    background: var(--link-color);
+    color: #FFFFFF;
     padding: 10px 20px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--link-color);
     border-radius: 6px;
     cursor: pointer;
     font-size: 1em;
@@ -129,7 +137,8 @@ a.button,
 button:not(.btn-link-delete):hover,
 a.button:hover,
 .donation-btn:hover {
-    background: var(--hover-bg);
+    background: var(--link-hover-color);
+    border: 1px solid var(--link-hover-color);
     transform: translateY(-2px);
 }
 
@@ -240,7 +249,7 @@ a.post-card-link {
 /* --- Delete Button --- */
 .btn-link-delete {
     background-color: transparent;
-    color: #ec4040;
+    color: var(--delete-color);
     border: transparent;
     text-decoration: underline;
     font-size: 0.95rem;
@@ -251,8 +260,8 @@ a.post-card-link {
 /* --- Search Controls Styling --- */
 .search-controls {
     display: flex;
-    align-items: center; /* Vertically aligns the slider, input, and button */
-    gap: 10px; /* Adds a bit of space between elements */
+    align-items: center;
+    gap: 10px;
     background: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
@@ -260,31 +269,31 @@ a.post-card-link {
 }
 
 .search-controls input[type="range"] {
-    flex-grow: 1; /* Makes the slider take up available space */
+    flex-grow: 1;
 }
 
 #edit-post-anchor,
 .posted-by-anchor,
 #edit-post-anchor:visited,
 .posted-by-anchor:visited,
-#edit-post-anchor:hover,
-.posted-by-anchor:hover,
 #edit-post-anchor:active,
 .posted-by-anchor:active,
 #edit-post-anchor:focus,
-.posted-by-anchor:focus,
-{
-    color: rgb(59, 123, 243);
+.posted-by-anchor:focus {
+    color: var(--link-color);
 }
 
+#edit-post-anchor:hover,
+.posted-by-anchor:hover {
+    color: var(--link-hover-color);
+}
 
 .redirect-anchor,
 .redirect-anchor:visited,
 .redirect-anchor:hover,
 .redirect-anchor:active,
-.redirect-anchor:focus
-{
-    color: #ffffff;
+.redirect-anchor:focus {
+    color: var(--text-color);
 }
 
 #accept-anchor,
@@ -292,25 +301,23 @@ a.post-card-link {
 #accept-anchor:hover,
 #accept-anchor:active,
 #accept-anchor:focus {
-    color: rgb(21, 255, 0);
+    color: var(--accept-color);
 }
-
 
 #decline-anchor,
 #decline-anchor:visited,
 #decline-anchor:hover,
 #decline-anchor:active,
 #decline-anchor:focus {
-    color: rgb(247, 72, 72);
+    color: var(--decline-color);
 }
-
-
 
 /* --- Profile Page Styling --- */
 .profile-header {
     text-align: center;
     margin-bottom: 20px;
 }
+
 .profile-header h1 {
     margin-bottom: 10px;
 }
@@ -319,6 +326,7 @@ a.post-card-link {
     display: flex;
     gap: 30px;
 }
+
 .profile-section {
     flex: 1;
     background: var(--card-bg);
@@ -326,6 +334,7 @@ a.post-card-link {
     border-radius: 8px;
     padding: 25px;
 }
+
 .stat-item {
     display: flex;
     justify-content: space-between;
@@ -333,9 +342,11 @@ a.post-card-link {
     padding: 10px 0;
     border-bottom: 1px solid var(--border-color);
 }
+
 .stat-item:last-child {
     border-bottom: none;
 }
+
 .stat-value {
     font-weight: bold;
 }
@@ -347,49 +358,56 @@ a.post-card-link {
     font-size: 1.2em;
     margin-bottom: 20px;
 }
+
 .stars {
     color: #ffc107;
 }
+
 .avg-rating-text {
     font-size: 0.9em;
-    color: var(--secondary-color);
+    color: var(--text-color);
 }
+
 .rating-breakdown {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
+
 .rating-row {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .star-label {
     flex-basis: 50px;
     font-size: 0.9em;
 }
+
 .rating-bar-bg {
     flex-grow: 1;
     height: 10px;
-    background-color: var(--background-color);
+    background-color: var(--input-bg);
     border-radius: 5px;
 }
+
 .rating-bar-fg {
     height: 100%;
-    background-color: #ffc107; /* Star color */
+    background-color: #ffc107;
     border-radius: 5px;
 }
+
 .rating-count {
     flex-basis: 30px;
     text-align: right;
     font-size: 0.9em;
-    color: var(--secondary-color);
+    color: var(--text-color);
 }
-
 
 /* --- Hamburger Menu Button --- */
 .hamburger-btn {
-    display: none; /* This is the crucial line that hides it on desktop */
+    display: none;
     background: var(--hover-bg);
     border: 1px solid var(--border-color);
     border-radius: 6px;
@@ -405,21 +423,20 @@ a.post-card-link {
 }
 
 .hamburger-line {
-    width: 100%; /* Make lines fill the button width */
+    width: 100%;
     height: 3px;
-    background-color: var(--text-color); /* Make the lines clearly visible */
+    background-color: var(--text-color);
     border-radius: 3px;
     transition: all 0.3s ease-in-out;
 }
 
 .hamburger-btn:hover {
-    background-color: var(--input-bg); /* Slight hover effect */
+    background-color: var(--input-bg);
     border-color: var(--text-color);
 }
 
 /* --- RESPONSIVE STYLES (for tablets and phones) --- */
 @media (max-width: 768px) {
-    
     /* --- General Layout --- */
     .container {
         padding: 0 15px;
@@ -427,11 +444,11 @@ a.post-card-link {
 
     /* --- Navigation Bar --- */
     .nav-container {
-        flex-direction: row; 
-        justify-content: space-between; 
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
     }
-    
+
     .hamburger-btn {
         display: flex;
     }
@@ -450,30 +467,32 @@ a.post-card-link {
         border-top: 1px solid var(--border-color);
         z-index: 999;
     }
-    
+
     .nav-menu.active {
         display: flex;
     }
+
     .nav-menu li {
         width: 100%;
         text-align: center;
     }
+
     .nav-menu a {
         display: block;
         padding: 10px 0;
         margin: 0;
         border-radius: 0;
     }
+
     .nav-menu a:hover {
         background-color: var(--hover-bg);
     }
-    
+
     /* --- Multi-Column Layouts --- */
     .details-container {
         flex-direction: column;
     }
 
-    /* THIS IS THE NEW RULE YOU JUST ADDED */
     .profile-container {
         flex-direction: column;
     }
@@ -483,7 +502,7 @@ a.post-card-link {
         width: 100%;
         box-sizing: border-box;
     }
-    
+
     /* --- Search Controls --- */
     .search-controls {
         flex-direction: column;
