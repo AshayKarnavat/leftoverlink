@@ -272,8 +272,19 @@ a.post-card-link {
 #edit-post-anchor:active,
 .posted-by-anchor:active,
 #edit-post-anchor:focus,
-.posted-by-anchor:focus {
+.posted-by-anchor:focus,
+{
     color: rgb(59, 123, 243);
+}
+
+
+.redirect-anchor,
+.redirect-anchor:visited,
+.redirect-anchor:hover,
+.redirect-anchor:active,
+.redirect-anchor:focus
+{
+    color: #ffffff;
 }
 
 #accept-anchor,
