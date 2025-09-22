@@ -47,6 +47,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 db.init_app(app)
 
+session.permanent = True
 
 
 login_manager = LoginManager()
