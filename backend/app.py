@@ -142,11 +142,6 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-# --- NEW: Route for posting food ---
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 # app.py
 # ...
@@ -416,9 +411,10 @@ def edit_post(post_id):
         post.city = request.form['city']
         
         # Handle optional new image upload
+# ...
         if 'image' in request.files:
             file = request.files['image']
-            if file.filename != '' and allowed_file(file.filename): # The old `allowed_file` check is no longer needed but doesn't hurt.
+            if file.filename != '': # Simply check if a file was actually provided
                 
                 # Delete old image from Cloudinary
                 old_public_id = post.image_url.split('/')[-1].split('.')[0]
