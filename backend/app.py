@@ -142,7 +142,14 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-
+@app.route('/create-tables-9876543210')
+def create_tables():
+    try:
+        with app.app_context():
+            db.create_all()
+        return "Database tables created successfully!", 200
+    except Exception as e:
+        return f"An error occurred: {e}", 500
 # app.py
 # ...
 @app.route("/post_food", methods=["GET", "POST"])
