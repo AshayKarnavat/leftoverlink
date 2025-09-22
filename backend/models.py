@@ -1,3 +1,4 @@
+#models.py
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from datetime import datetime
@@ -33,7 +34,7 @@ class FoodPost(db.Model):
     lon = db.Column(db.Float, nullable=False)
     
     # Image file info
-    image_filename = db.Column(db.String(120), nullable=False)
+    image_url = db.Column(db.String(255), nullable=False)
 
     # ADD THIS NEW COLUMN
     status = db.Column(db.String(20), nullable=False, default='available') # available, claimed

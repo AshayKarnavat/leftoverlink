@@ -1,3 +1,4 @@
+<!-- post_details.html -->
 {% extends "base.html" %}
 
 {% block title %}{{ post.food_name }} - Leftover Link{% endblock %}
@@ -5,7 +6,7 @@
 {% block content %}
     <div class="details-container">
         <div class="details-image">
-            <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" alt="{{ post.food_name }}">
+            <img src="{{ post.image_url }}" alt="{{ post.food_name }}">
         </div>
         <div class="details-info">
             <h1>{{ post.food_name }}</h1>

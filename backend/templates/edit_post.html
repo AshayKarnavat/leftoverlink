@@ -1,3 +1,4 @@
+<!-- edit_post.html -->
 {% extends "base.html" %}
 
 {% block title %}Edit Post - Leftover Link{% endblock %}
@@ -23,7 +24,7 @@
 
         <label for="image">Upload New Photo (optional):</label>
         <p>Current image:</p>
-        <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" width="150" style="border-radius: 4px;">
+        <img src="{{ post.image_url }}" width="150" style="border-radius: 4px;">
         <input type="file" id="image" name="image" accept="image/*">
 
         <label>Drag the pin to update the pickup location:</label>

@@ -1,3 +1,4 @@
+#app.py
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -8,11 +9,27 @@ from math import radians, cos, sin, asin, sqrt
 from flask import jsonify
 from dotenv import load_dotenv
 load_dotenv()
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from cloudinary.uploader import upload
+from cloudinary.api import delete_resources
+from cloudinary import CloudinaryImage
 # Import both models now
 from models import db, User, FoodPost, Request, Rating
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
+# --- Add this Cloudinary configuration ---
+cloudinary.config(
+  cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+  api_key = os.environ.get('CLOUDINARY_API_KEY'),
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+  secure = True
+)
+# ---
+
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
     # Use the Render PostgreSQL database
@@ -25,9 +42,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # --- NEW: Configuration for file uploads ---
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-UPLOAD_FOLDER = os.path.join(basedir, 'static/uploads')
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 # ---
 
 db.init_app(app)
@@ -133,53 +148,43 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-
+# app.py
+# ...
 @app.route("/post_food", methods=["GET", "POST"])
 @login_required
 def post_food():
     if request.method == "POST":
-        # 1. Check if the post request has the file part
-        if 'image' not in request.files:
-            flash('No file part in the form submission.', 'error')
+        # 1. Check for the image file
+        if 'image' not in request.files or request.files['image'].filename == '':
+            flash('No image file was provided!', 'error')
             return redirect(request.url)
-            
-        file = request.files['image']
 
-        # 2. If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No file selected for uploading.', 'error')
+        file_to_upload = request.files['image']
+
+        # 2. Upload the file directly to Cloudinary
+        try:
+            upload_result = cloudinary.uploader.upload(file_to_upload)
+            image_url = upload_result.get('secure_url')
+        except Exception as e:
+            flash(f'Image upload failed: {e}', 'error')
             return redirect(request.url)
-            
-        # 3. Check if the file is of an allowed type and save it
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            # Ensure the upload folder exists
-            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-            # --- All good, now create the database record ---
-            new_post = FoodPost(
-                food_name=request.form['food_name'],
-                description=request.form['description'],
-                quantity=request.form['quantity'],
-                phone_number=request.form['phone_number'],
-                city=request.form['city'],
-                lat=float(request.form['lat']),
-                lon=float(request.form['lon']),
-                image_filename=filename,
-                author=current_user
-            )
-            db.session.add(new_post)
-            db.session.commit()
-            flash('Your food post has been created!', 'success')
-            # --- THIS LINE IS NOW FIXED ---
-            return redirect(url_for('home'))
-        
-        # 4. If the file extension is not allowed
-        else:
-            flash('Invalid file type. Please upload a PNG, JPG, JPEG, or GIF.', 'error')
-            return redirect(request.url)
+
+        # 3. Create the database record with the new URL
+        new_post = FoodPost(
+            food_name=request.form['food_name'],
+            description=request.form['description'],
+            quantity=request.form['quantity'],
+            phone_number=request.form['phone_number'],
+            city=request.form['city'],
+            lat=float(request.form['lat']),
+            lon=float(request.form['lon']),
+            image_url=image_url, # << THIS IS THE NEW LINE
+            author=current_user
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        flash('Your food post has been created!', 'success')
+        return redirect(url_for('home'))
 
     # This is for the GET request (first time loading the page)
     return render_template('post_food.html')
@@ -370,22 +375,16 @@ def dashboard():
 @login_required
 def delete_post(post_id):
     post = FoodPost.query.get_or_404(post_id)
-    
-    # Security check: Ensure the current user is the post's author
-    if post.author.id != current_user.id:
-        flash('You are not authorized to delete this post.', 'error')
-        return redirect(url_for('home'))
-        
+    # ...
     try:
-        # Delete the image file from the server
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], post.image_filename)
-        if os.path.exists(image_path):
-            os.remove(image_path)
-            
-        # Delete the post and its associated requests from the database
+        # Get the public ID from the image URL to delete it from Cloudinary
+        public_id = post.image_url.split('/')[-1].split('.')[0]
+        cloudinary.uploader.destroy(public_id)
+
+        # Delete the post from the database
         db.session.delete(post)
         db.session.commit()
-        flash('Your post has been deleted.', 'success')
+        flash('Your post has been deleted.', 'success')     
     except Exception as e:
         db.session.rollback()
         flash(f'Error deleting post: {e}', 'error')
@@ -419,16 +418,15 @@ def edit_post(post_id):
         # Handle optional new image upload
         if 'image' in request.files:
             file = request.files['image']
-            if file.filename != '' and allowed_file(file.filename):
-                # Delete old image
-                old_image_path = os.path.join(app.config['UPLOAD_FOLDER'], post.image_filename)
-                if os.path.exists(old_image_path):
-                    os.remove(old_image_path)
+            if file.filename != '' and allowed_file(file.filename): # The old `allowed_file` check is no longer needed but doesn't hurt.
                 
-                # Save new image
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                post.image_filename = filename
+                # Delete old image from Cloudinary
+                old_public_id = post.image_url.split('/')[-1].split('.')[0]
+                cloudinary.uploader.destroy(old_public_id)
+
+                # Upload new image to Cloudinary
+                new_upload_result = cloudinary.uploader.upload(file)
+                post.image_url = new_upload_result.get('secure_url')
 
         db.session.commit()
         flash('Your post has been updated!', 'success')

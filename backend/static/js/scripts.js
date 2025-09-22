@@ -1,3 +1,4 @@
+// script.js
 // --- 1. Google Maps Initialization (GLOBAL SCOPE) ---
 // This function is now smart enough to handle maps on different pages.
 let searchMapMarker; // Make the search map marker globally accessible within this script
@@ -170,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const postCardHTML = `
                             <a href="/post/${post.id}" class="post-card-link">
                                 <div class="post-card">
-                                    <img src="/static/uploads/${post.image_filename}" alt="${post.food_name}">
+                                    <img src="${post.image_url}" alt="${post.food_name}">
                                     <h3>${post.food_name}</h3>
                                     <p class="post-description">${post.description}</p>
                                     <p><strong>Quantity:</strong> ${post.quantity}</p>
