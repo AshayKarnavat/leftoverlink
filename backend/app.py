@@ -263,7 +263,7 @@ def nearby_posts():
                 "description": post.description,
                 "quantity": post.quantity,
                 "city": post.city,
-                "image_filename": post.image_filename,
+                "image_url": post.image_url,
                 "author_username": post.author.username
             })
     
