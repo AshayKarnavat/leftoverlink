@@ -452,8 +452,9 @@ a.post-card-link {
     .hamburger-btn {
         display: flex;
     }
-
+    
     .nav-menu {
+        background-color: #06102c;
         display: none;
         position: absolute;
         top: 60px;
@@ -478,6 +479,7 @@ a.post-card-link {
     }
 
     .nav-menu a {
+        color: #FFFFFF;
         display: block;
         padding: 10px 0;
         margin: 0;
@@ -485,7 +487,9 @@ a.post-card-link {
     }
 
     .nav-menu a:hover {
-        background-color: var(--hover-bg);
+        background-color: #0d1a42; 
+        color: #FFFFFF;
+        
     }
 
     /* --- Multi-Column Layouts --- */
