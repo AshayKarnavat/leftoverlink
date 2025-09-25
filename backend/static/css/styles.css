@@ -20,6 +20,11 @@ h1, h2, h3, h4, h5, h6 {
     color: #FFFFFF; /* All headings white */
 }
 
+/* --- Paragraphs --- */
+p {
+    color: #FFFFFF; /* Updated paragraph text to white */
+}
+
 /* --- Navigation Bar --- */
 .navbar {
     background: #06102c;
@@ -312,7 +317,7 @@ a.post-card-link {
 
 .profile-section {
     flex: 1;
-    background: #0d1824; /* Updated profile section background */
+    background: #06102c; /* Updated profile section background */
     border: 1px solid #DDDDDD;
     border-radius: 8px;
     padding: 25px;
