@@ -1,39 +1,12 @@
 /* --- White & Charcoal Minimalist Theme --- */
 
-/* --- Color Variables --- */
-:root {
-    --main-bg: #FFFFFF;
-    --card-bg: #F5F5F5;
-    --input-bg: #FFFFFF;
-    --hover-bg: #E0E0E0;
-    --text-color: #222222;
-    --border-color: #DDDDDD;
-    --shadow-color: rgba(0,0,0,0.1);
-
-    /* Alert and button colors */
-    --alert-success-bg: #D4EDDA;
-    --alert-success-border: #C3E6CB;
-    --alert-error-bg: #F8D7DA;
-    --alert-error-border: #F5C6CB;
-    --alert-info-bg: #D1ECF1;
-    --alert-info-border: #BEE5EB;
-    
-    /* Link and button colors for better visual hierarchy */
-    --link-color: #007BFF;
-    --link-hover-color: #0056b3;
-    --delete-color: #DC3545;
-    --accept-color: #28A745;
-    --decline-color: #DC3545;
-}
-
 /* --- Body & Container --- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     margin: 0;
-    background: var(--main-bg);
-    color: var(--text-color);
+    background: #0d1824; /* Updated website background */
+    color: #222222;
     line-height: 1.6;
-
 }
 
 .container {
@@ -42,10 +15,15 @@ body {
     padding: 0 20px;
 }
 
+/* --- Headings --- */
+h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF; /* All headings white */
+}
+
 /* --- Navigation Bar --- */
 .navbar {
     background: #06102c;
-    box-shadow: 0 2px 6px var(--shadow-color);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     padding: 1rem 2rem;
     position: sticky;
     top: 0;
@@ -76,28 +54,32 @@ body {
 }
 
 .nav-menu a {
-    padding:5px;
+    padding: 5px;
     margin: -5px;
     border-radius: 8px;
     text-decoration: none;
-    color: var(--text-color);
+    color: #222222;
     font-weight: 500;
     transition: color 0.2s;
 }
 
 .nav-menu a:hover {
-    background-color: var(--hover-bg);
+    background-color: #E0E0E0;
 }
 
 /* --- Forms & Inputs --- */
 form:not(.form-link) {
-    background: var(--card-bg);
+    background: #06102c; /* Form background */
     padding: 25px;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #DDDDDD;
     margin-top: 20px;
-    box-shadow: 0 6px 20px var(--shadow-color);
-    color: var(--text-color);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* Stronger shadow */
+    color: #FFFFFF; /* White text for labels */
+}
+
+form label {
+    color: #FFFFFF; /* Labels white */
 }
 
 input[type="text"],
@@ -110,9 +92,9 @@ select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    background: var(--input-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background: #c4cfec; /* Input background */
+    color: #222222;
+    border: 1px solid #DDDDDD;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -121,10 +103,10 @@ select {
 button:not(.btn-link-delete,.hamburger-btn),
 a.button,
 .donation-btn {
-    background: var(--link-color);
+    background: #007BFF;
     color: #FFFFFF;
     padding: 10px 20px;
-    border: 1px solid var(--link-color);
+    border: 1px solid #007BFF;
     border-radius: 6px;
     cursor: pointer;
     font-size: 1em;
@@ -137,8 +119,8 @@ a.button,
 button:not(.btn-link-delete):hover,
 a.button:hover,
 .donation-btn:hover {
-    background: var(--link-hover-color);
-    border: 1px solid var(--link-hover-color);
+    background: #0056b3;
+    border: 1px solid #0056b3;
     transform: translateY(-2px);
 }
 
@@ -151,21 +133,21 @@ a.button:hover,
 }
 
 .alert-success {
-    color: var(--text-color);
-    background-color: var(--alert-success-bg);
-    border-color: var(--alert-success-border);
+    color: #222222;
+    background-color: #D4EDDA;
+    border-color: #C3E6CB;
 }
 
 .alert-error {
-    color: var(--text-color);
-    background-color: var(--alert-error-bg);
-    border-color: var(--alert-error-border);
+    color: #222222;
+    background-color: #F8D7DA;
+    border-color: #F5C6CB;
 }
 
 .alert-info {
-    color: var(--text-color);
-    background-color: var(--alert-info-bg);
-    border-color: var(--alert-info-border);
+    color: #222222;
+    background-color: #D1ECF1;
+    border-color: #BEE5EB;
 }
 
 /* --- Post Cards --- */
@@ -182,19 +164,19 @@ a.post-card-link {
 }
 
 .post-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+    background: #0d1824; /* Updated card background */
+    border: 1px solid #DDDDDD;
     border-radius: 8px;
     padding: 15px;
     width: 250px;
-    box-shadow: 0 1px 3px var(--shadow-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     transition: transform 0.2s, box-shadow 0.2s;
-    color: var(--text-color);
+    color: #FFFFFF;
 }
 
 .post-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 8px 20px var(--shadow-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
 .post-card img {
@@ -207,13 +189,13 @@ a.post-card-link {
 .post-card h3 {
     margin-top: 10px;
     margin-bottom: 5px;
-    color: var(--text-color);
+    color: #FFFFFF; /* White headings */
 }
 
 .post-card p,
 .posted-by,
 .post-description {
-    color: var(--text-color);
+    color: #FFFFFF;
 }
 
 /* --- Details Page --- */
@@ -221,11 +203,11 @@ a.post-card-link {
     display: flex;
     gap: 30px;
     margin: 20px auto;
-    background: var(--card-bg);
+    background: #0d1824; /* Card-style background */
     padding: 25px;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
+    border: 1px solid #DDDDDD;
+    color: #FFFFFF;
 }
 
 .details-image {
@@ -243,13 +225,13 @@ a.post-card-link {
 
 .details-info h1 {
     margin-top: 0;
-    color: var(--text-color);
+    color: #FFFFFF; /* White heading */
 }
 
 /* --- Delete Button --- */
 .btn-link-delete {
     background-color: transparent;
-    color: var(--delete-color);
+    color: #DC3545;
     border: transparent;
     text-decoration: underline;
     font-size: 0.95rem;
@@ -262,10 +244,10 @@ a.post-card-link {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: var(--card-bg);
+    background: #0d1824; /* Updated search background */
     padding: 20px;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #DDDDDD;
 }
 
 .search-controls input[type="range"] {
@@ -280,12 +262,12 @@ a.post-card-link {
 .posted-by-anchor:active,
 #edit-post-anchor:focus,
 .posted-by-anchor:focus {
-    color: var(--link-color);
+    color: #007BFF;
 }
 
 #edit-post-anchor:hover,
 .posted-by-anchor:hover {
-    color: var(--link-hover-color);
+    color: #0056b3;
 }
 
 .redirect-anchor,
@@ -293,7 +275,7 @@ a.post-card-link {
 .redirect-anchor:hover,
 .redirect-anchor:active,
 .redirect-anchor:focus {
-    color: var(--text-color);
+    color: #FFFFFF;
 }
 
 #accept-anchor,
@@ -301,7 +283,7 @@ a.post-card-link {
 #accept-anchor:hover,
 #accept-anchor:active,
 #accept-anchor:focus {
-    color: var(--accept-color);
+    color: #28A745;
 }
 
 #decline-anchor,
@@ -309,7 +291,7 @@ a.post-card-link {
 #decline-anchor:hover,
 #decline-anchor:active,
 #decline-anchor:focus {
-    color: var(--decline-color);
+    color: #DC3545;
 }
 
 /* --- Profile Page Styling --- */
@@ -320,6 +302,7 @@ a.post-card-link {
 
 .profile-header h1 {
     margin-bottom: 10px;
+    color: #FFFFFF; /* White heading */
 }
 
 .profile-container {
@@ -329,10 +312,11 @@ a.post-card-link {
 
 .profile-section {
     flex: 1;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+    background: #0d1824; /* Updated profile section background */
+    border: 1px solid #DDDDDD;
     border-radius: 8px;
     padding: 25px;
+    color: #FFFFFF;
 }
 
 .stat-item {
@@ -340,7 +324,7 @@ a.post-card-link {
     justify-content: space-between;
     font-size: 1.1em;
     padding: 10px 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .stat-item:last-child {
@@ -365,7 +349,7 @@ a.post-card-link {
 
 .avg-rating-text {
     font-size: 0.9em;
-    color: var(--text-color);
+    color: #FFFFFF;
 }
 
 .rating-breakdown {
@@ -388,7 +372,7 @@ a.post-card-link {
 .rating-bar-bg {
     flex-grow: 1;
     height: 10px;
-    background-color: var(--input-bg);
+    background-color: #FFFFFF;
     border-radius: 5px;
 }
 
@@ -402,14 +386,14 @@ a.post-card-link {
     flex-basis: 30px;
     text-align: right;
     font-size: 0.9em;
-    color: var(--text-color);
+    color: #FFFFFF;
 }
 
 /* --- Hamburger Menu Button --- */
 .hamburger-btn {
     display: none;
-    background: var(--hover-bg);
-    border: 1px solid var(--border-color);
+    background: #E0E0E0;
+    border: 1px solid #DDDDDD;
     border-radius: 6px;
     padding: 8px 10px;
     cursor: pointer;
@@ -425,24 +409,22 @@ a.post-card-link {
 .hamburger-line {
     width: 100%;
     height: 3px;
-    background-color: var(--text-color);
+    background-color: #222222;
     border-radius: 3px;
     transition: all 0.3s ease-in-out;
 }
 
 .hamburger-btn:hover {
-    background-color: var(--input-bg);
-    border-color: var(--text-color);
+    background-color: #FFFFFF;
+    border-color: #222222;
 }
 
 /* --- RESPONSIVE STYLES (for tablets and phones) --- */
 @media (max-width: 768px) {
-    /* --- General Layout --- */
     .container {
         padding: 0 15px;
     }
 
-    /* --- Navigation Bar --- */
     .nav-container {
         flex-direction: row;
         justify-content: space-between;
@@ -452,7 +434,7 @@ a.post-card-link {
     .hamburger-btn {
         display: flex;
     }
-    
+
     .nav-menu {
         background-color: #06102c;
         display: none;
@@ -463,8 +445,8 @@ a.post-card-link {
         flex-direction: column;
         align-items: center;
         padding: 15px 0;
-        box-shadow: 0 4px 6px var(--shadow-color);
-        border-top: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-top: 1px solid #DDDDDD;
         z-index: 999;
     }
 
@@ -486,12 +468,10 @@ a.post-card-link {
     }
 
     .nav-menu a:hover {
-        background-color: #0d1a42; 
+        background-color: #0d1a42;
         color: #FFFFFF;
-        
     }
 
-    /* --- Multi-Column Layouts --- */
     .details-container {
         flex-direction: column;
     }
@@ -500,13 +480,11 @@ a.post-card-link {
         flex-direction: column;
     }
 
-    /* --- Post Cards --- */
     .post-card {
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* --- Search Controls --- */
     .search-controls {
         flex-direction: column;
         align-items: stretch;
