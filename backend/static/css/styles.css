@@ -460,7 +460,6 @@ a.post-card-link {
         top: 60px;
         left: 0;
         width: 100%;
-        background-color: var(--card-bg);
         flex-direction: column;
         align-items: center;
         padding: 15px 0;
