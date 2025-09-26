@@ -22,10 +22,17 @@
 
             <ul class="nav-menu" id="nav-links">
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('home') }}" style="color:white;">Home</a></li>
-                    <li><a href="{{ url_for('post_food') }}" style="color:white;">Post Food</a></li>
-                    <li><a href="{{ url_for('search') }}" style="color:white;">Search</a></li>
-                    <li><a href="{{ url_for('dashboard') }}" style="color:white;">My Dashboard</a></li>
+                    
+                    {% if current_user.is_admin %}
+                        <li><a href="{{ url_for('dashboard') }}" style="color:white; font-weight: bold;">Admin Dashboard</a></li>
+                        
+                    {% else %}
+                        <li><a href="{{ url_for('home') }}" style="color:white;">Home</a></li>
+                        <li><a href="{{ url_for('post_food') }}" style="color:white;">Post Food</a></li>
+                        <li><a href="{{ url_for('search') }}" style="color:white;">Search</a></li>
+                        <li><a href="{{ url_for('dashboard') }}" style="color:white;">My Dashboard</a></li>
+                    {% endif %}
+                    
                 {% else %}
                     <li><a href="{{ url_for('login') }}" style="color:white;">Login</a></li>
                     <li><a href="{{ url_for('register') }}" style="color:white;">Register</a></li>
@@ -47,10 +54,5 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-
-</div>
-
-
-
 </body>
 </html>
