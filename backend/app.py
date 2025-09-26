@@ -68,35 +68,6 @@ def home():
         return render_template("home.html", username=current_user.username, posts=posts)
     return redirect(url_for("login"))
 
-# In backend/app.py
-
-# --- ADD THIS TEMPORARY ROUTE AT THE BOTTOM ---
-@app.route('/create-tables-9876543210')
-def create_tables():
-    try:
-        with app.app_context():
-            db.create_all()
-        return "Database tables created successfully!", 200
-    except Exception as e:
-        return f"An error occurred: {e}", 500
-
-@app.route('/make-admin/<username>/<secret_key>')
-def make_admin(username, secret_key):
-    # WARNING: THIS ROUTE IS FOR DEVELOPMENT/TESTING ONLY
-    # You MUST REMOVE or secure this route before deploying!
-    
-    if secret_key != 'your-super-secret-admin-key': # Use a strong key from your .env
-        return "Unauthorized access.", 403
-
-    user = User.query.filter_by(username=username).first()
-    
-    if user:
-        user.is_admin = True
-        db.session.commit()
-        return f"User {username} is now an administrator!", 200
-    else:
-        return f"User {username} not found.", 404
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
