@@ -63,8 +63,8 @@ def inject_google_api_key():
 @app.route("/")
 def home():
     if current_user.is_authenticated:
-        # CHANGE THIS QUERY to filter by status
-        posts = FoodPost.query.filter_by(status='available').order_by(FoodPost.post_date.desc()).all()
+        # NEW QUERY: Filter by status='available' AND approval_status='approved'
+        posts = FoodPost.query.filter_by(status='available', approval_status='approved').order_by(FoodPost.post_date.desc()).all()
         return render_template("home.html", username=current_user.username, posts=posts)
     return redirect(url_for("login"))
 
@@ -80,7 +80,22 @@ def create_tables():
     except Exception as e:
         return f"An error occurred: {e}", 500
 
+@app.route('/make-admin/<username>/<secret_key>')
+def make_admin(username, secret_key):
+    # WARNING: THIS ROUTE IS FOR DEVELOPMENT/TESTING ONLY
+    # You MUST REMOVE or secure this route before deploying!
+    
+    if secret_key != 'your-super-secret-admin-key': # Use a strong key from your .env
+        return "Unauthorized access.", 403
 
+    user = User.query.filter_by(username=username).first()
+    
+    if user:
+        user.is_admin = True
+        db.session.commit()
+        return f"User {username} is now an administrator!", 200
+    else:
+        return f"User {username} not found.", 404
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -141,8 +156,89 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-# app.py
-# ...
+
+# --- DELETED THE OLD admin_dashboard() function here ---
+
+# --- START: New unified dashboard() function ---
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    user = current_user
+    
+    # === ADMIN CHECK ===
+    if user.is_admin:
+        # Fetch data needed for the admin dashboard
+        pending_posts = FoodPost.query.filter_by(approval_status='pending').order_by(FoodPost.post_date.asc()).all()
+        approved_posts = FoodPost.query.filter_by(approval_status='approved').order_by(FoodPost.post_date.desc()).all()
+        
+        # Load the dedicated admin template with admin data
+        return render_template('admin_dashboard.html', 
+                               pending_posts=pending_posts, 
+                               approved_posts=approved_posts)
+    
+    # === REGULAR USER LOGIC (if not an admin) ===
+    
+    # --- Original Donation and Rating Stats ---
+    total_donations = len(user.posts)
+    successful_pickups = FoodPost.query.filter_by(author=user, status='claimed').count()
+    currently_available = total_donations - successful_pickups
+    food_claimed = Request.query.filter_by(requester_id=user.id, status='accepted').count()
+    
+    # Rating Stats
+    rating_counts = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+    for rating in user.ratings_received:
+        if rating.score in rating_counts:
+            rating_counts[rating.score] += 1
+            
+    # --- Original Queries for Posts and Requests ---
+    my_posts = FoodPost.query.filter_by(author=user).order_by(FoodPost.post_date.desc()).all()
+    my_requests = Request.query.filter_by(requester=user).order_by(Request.request_date.desc()).all()
+    
+    # Load the regular user template with user data
+    return render_template(
+        'dashboard.html', 
+        my_posts=my_posts, 
+        my_requests=my_requests,
+        total_donations=total_donations,
+        successful_pickups=successful_pickups,
+        currently_available=currently_available,
+        rating_counts=rating_counts,
+        food_claimed=food_claimed
+    )
+# --- END: New unified dashboard() function ---
+
+
+# ... 
+@app.route('/admin/verify_post/<int:post_id>/<action>')
+@login_required
+def verify_post(post_id, action):
+    # 1. Security check: Must be an admin
+    if not current_user.is_admin:
+        flash("Authorization failed.", "error")
+        return redirect(url_for('home'))
+
+    post = FoodPost.query.get_or_404(post_id)
+    
+    # 2. Validate action and update status
+    if action == 'approve':
+        post.approval_status = 'approved'
+        flash(f"Post '{post.food_name}' approved and is now live.", 'success')
+        
+    elif action == 'decline':
+        # Optional: You might delete the post or just mark it as declined
+        post.approval_status = 'declined'
+        flash(f"Post '{post.food_name}' declined and will not be shown.", 'info')
+
+    else:
+        flash("Invalid verification action.", 'error')
+        # Changed redirect from 'admin_dashboard' to 'dashboard' since we are consolidating
+        return redirect(url_for('dashboard')) 
+
+    db.session.commit()
+    # Changed redirect from 'admin_dashboard' to 'dashboard' since we are consolidating
+    return redirect(url_for('dashboard')) 
+
+
 @app.route("/post_food", methods=["GET", "POST"])
 @login_required
 def post_food():
@@ -176,7 +272,7 @@ def post_food():
         )
         db.session.add(new_post)
         db.session.commit()
-        flash('Your food post has been created!', 'success')
+        flash('Food post request sent to admin!', 'success')
         return redirect(url_for('home'))
 
     # This is for the GET request (first time loading the page)
@@ -329,40 +425,6 @@ def handle_request(request_id, action):
     db.session.commit()
     return redirect(url_for('dashboard'))
 
-
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    # --- NEW: Calculate all stats for the current user ---
-    user = current_user
-    
-    # Donation Stats
-    total_donations = len(user.posts)
-    successful_pickups = FoodPost.query.filter_by(author=user, status='claimed').count()
-    currently_available = total_donations - successful_pickups
-    # ADD THIS CALCULATION
-    food_claimed = Request.query.filter_by(requester_id=user.id, status='accepted').count()
-    # Rating Stats
-    rating_counts = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
-    for rating in user.ratings_received:
-        if rating.score in rating_counts:
-            rating_counts[rating.score] += 1
-            
-    # --- Original queries for posts and requests ---
-    my_posts = FoodPost.query.filter_by(author=user).order_by(FoodPost.post_date.desc()).all()
-    my_requests = Request.query.filter_by(requester=user).order_by(Request.request_date.desc()).all()
-    
-    return render_template(
-        'dashboard.html', 
-        my_posts=my_posts, 
-        my_requests=my_requests,
-        total_donations=total_donations,
-        successful_pickups=successful_pickups,
-        currently_available=currently_available,
-        rating_counts=rating_counts,
-        food_claimed=food_claimed
-    )
-
     
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 @login_required
@@ -478,4 +540,3 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
