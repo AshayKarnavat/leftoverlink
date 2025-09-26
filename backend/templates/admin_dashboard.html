@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Admin Moderation Panel</h1>
+        
+        <form action="{{ url_for('logout') }}" method="get" class="form-link">
+            <button type="submit" class="btn-link-secondary">Logout</button>
+        </form>
+        </div>
+    <hr>
+
+    <h2>Food Posts Awaiting Approval ({{ pending_posts|length }} Pending)</h2>
+    <div class="post-container">
+        {% if pending_posts %}
+            {% for post in pending_posts %}
+                <div class="post-card" style="border: 2px solid orange;">
+                    <img src="{{ post.image_url }}" alt="{{ post.food_name }}" style="width: 100%; height: 150px; object-fit: cover; margin-bottom: 10px;">
+                    
+                    <h3>{{ post.food_name }}</h3>
+                    <p><strong>Status:</strong> <span style="color: orange;">{{ post.approval_status.capitalize() }}</span></p>
+                    <p><strong>Quantity:</strong> {{ post.quantity }}</p>
+                    <p><strong>Phone:</strong> <span style="font-weight: bold; color: #007bff;">{{ post.phone_number }}</span></p>
+                    
+                    <p><strong>City:</strong> 
+                        <a href="https://www.google.com/maps?q={{ post.lat }},{{ post.lon }}" target="_blank" class="posted-by-anchor">
+                            {{ post.city }}
+                        </a>
+                    </p>
+                    
+                    <p><strong>Posted by:</strong> <a href="{{ url_for('profile', username=post.author.username) }}" class="posted-by-anchor">{{ post.author.username }}</a></p>
+                    <p><strong>Description:</strong> {{ post.description | truncate(100) }}</p>
+
+                    <div style="margin-top: 15px;">
+                        <a href="{{ url_for('verify_post', post_id=post.id, action='approve') }}" 
+                           style="background-color: #28a745; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; margin-right: 10px;">
+                           Approve Post
+                        </a>
+                        
+                        <a href="{{ url_for('verify_post', post_id=post.id, action='decline') }}" 
+                           style="background-color: #dc3545; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;">
+                           Decline Post
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: green;">🎉 No posts are currently awaiting approval. Great job!</p>
+        {% endif %}
+    </div>
+
+    <hr>
+    
+    <h2>All Approved & Live Posts ({{ approved_posts|length }} Live)</h2>
+    <div class="post-container">
+        {% if approved_posts %}
+            {% for post in approved_posts %}
+                 <div class="post-card" style="border: 2px solid #007bff;">
+                    <img src="{{ post.image_url }}" alt="{{ post.food_name }}" style="width: 100%; height: 150px; object-fit: cover; margin-bottom: 10px;">
+                    
+                    <h3>{{ post.food_name }}</h3>
+                    <p><strong>Status:</strong> <span style="color: green;">{{ post.status.capitalize() }}</span></p>
+                    <p><strong>Quantity:</strong> {{ post.quantity }}</p>
+                    <p><strong>City:</strong> 
+                        <a href="https://www.google.com/maps?q={{ post.lat }},{{ post.lon }}" target="_blank" class="posted-by-anchor">
+                            {{ post.city }}
+                        </a>
+                    </p>
+                    <p><strong>Posted by:</strong> <a href="{{ url_for('profile', username=post.author.username) }}" class="posted-by-anchor">{{ post.author.username }}</a></p>
+                    
+                    </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts are currently live.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}
