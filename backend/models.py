@@ -6,12 +6,14 @@ from datetime import datetime
 db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     avg_rating = db.Column(db.Float, default=0.0)
     num_ratings = db.Column(db.Integer, default=0)
+    is_admin = db.Column(db.Boolean, default=False)
     # Relationship to FoodPost
     posts = db.relationship('FoodPost', backref='author', lazy=True)
     # ADD THIS RELATIONSHIP
@@ -38,6 +40,12 @@ class FoodPost(db.Model):
 
     # ADD THIS NEW COLUMN
     status = db.Column(db.String(20), nullable=False, default='available') # available, claimed
+
+    # ADD THIS NEW COLUMN FOR ADMIN VERIFICATION
+    approval_status = db.Column(db.String(20), nullable=False, default='pending') # pending, approved, declined
+
+    # ADD THIS NEW COLUMN
+    phone_number = db.Column(db.String(20), nullable=False)   
 
     # ADD THIS NEW COLUMN
     phone_number = db.Column(db.String(20), nullable=False)  
