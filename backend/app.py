@@ -397,11 +397,18 @@ def handle_request(request_id, action):
     return redirect(url_for('dashboard'))
 
     
+# app.py
+
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
     post = FoodPost.query.get_or_404(post_id)
-    # ...
+    
+    # NEW SECURITY CHECK: Allow deletion if current_user is the author OR is an admin
+    if post.author.id != current_user.id and not current_user.is_admin:
+        flash('You are not authorized to delete this post.', 'error')
+        return redirect(url_for('dashboard'))
+    
     try:
         # Get the public ID from the image URL to delete it from Cloudinary
         public_id = post.image_url.split('/')[-1].split('.')[0]
@@ -410,14 +417,12 @@ def delete_post(post_id):
         # Delete the post from the database
         db.session.delete(post)
         db.session.commit()
-        flash('Your post has been deleted.', 'success')     
+        flash('The post has been deleted.', 'success')  # Changed message to be generic for admin
     except Exception as e:
         db.session.rollback()
         flash(f'Error deleting post: {e}', 'error')
         
     return redirect(url_for('dashboard'))
-
-# In backend/app.py
 
 @app.route('/edit_post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
