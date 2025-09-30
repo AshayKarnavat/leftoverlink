@@ -118,6 +118,11 @@
                         {% if user_rating.value %}
                             <h4>Your Rating:</h4>
                             <p style="font-size: 1.2em; color: #ffc107;">{{ '⭐' * user_rating.value.score }}{{ '☆' * (5 - user_rating.value.score) }}</p>
+                            {% if user_rating.value.comment %}
+                                <p style="margin: 5px 0; font-size: 0.95em; color: #333;">
+                                    "{{ user_rating.value.comment }}"
+                                </p>
+                            {% endif %}
                         {% else %}
                             <h4>Rate this pickup:</h4>
                                 <form action="{{ url_for('submit_rating', request_id=req.id) }}" method="POST" class="form-link">
