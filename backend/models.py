@@ -47,9 +47,6 @@ class FoodPost(db.Model):
     # ADD THIS NEW COLUMN
     phone_number = db.Column(db.String(20), nullable=False)   
 
-    # ADD THIS NEW COLUMN
-    phone_number = db.Column(db.String(20), nullable=False)  
-
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     
     # Foreign Key to link to the User
