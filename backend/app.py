@@ -474,7 +474,7 @@ def edit_post(post_id):
 def submit_rating(request_id):
     req = Request.query.get_or_404(request_id)
     score = int(request.form.get('score'))
-
+    comment = request.form.get('comment')  
     # Security checks
     if req.requester_id != current_user.id:
         flash("You can only rate requests you made.", "error")
@@ -495,6 +495,7 @@ def submit_rating(request_id):
     # Create the new rating
     new_rating = Rating(
         score=score,
+        comment=comment,
         from_user_id=current_user.id,
         to_user_id=donor.id,
         request_id=req.id
