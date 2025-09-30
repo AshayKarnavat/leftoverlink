@@ -120,10 +120,21 @@
                             <p style="font-size: 1.2em; color: #ffc107;">{{ '⭐' * user_rating.value.score }}{{ '☆' * (5 - user_rating.value.score) }}</p>
                         {% else %}
                             <h4>Rate this pickup:</h4>
-                            <form action="{{ url_for('submit_rating', request_id=req.id) }}" method="POST" class="form-link">
-                                <select name="score" required><option value="5">5 - Excellent ⭐⭐⭐⭐⭐</option><option value-="4">4 - Good ⭐⭐⭐⭐</option><option value="3">3 - Average ⭐⭐⭐</option><option value="2">2 - Poor ⭐⭐</option><option value="1">1 - Very Poor ⭐</option></select>
-                                <button type="submit">Submit Rating</button>
-                            </form>
+                                <form action="{{ url_for('submit_rating', request_id=req.id) }}" method="POST" class="form-link">
+                                    <label>Rating:</label>
+                                    <select name="score" required>
+                                        <option value="5">5 - Excellent ⭐⭐⭐⭐⭐</option>
+                                        <option value="4">4 - Good ⭐⭐⭐⭐</option>
+                                        <option value="3">3 - Average ⭐⭐⭐</option>
+                                        <option value="2">2 - Poor ⭐⭐</option>
+                                        <option value="1">1 - Very Poor ⭐</option>
+                                    </select>
+                                    <br>
+                                    <label>Comment (optional):</label>
+                                    <textarea name="comment" placeholder="Leave feedback for the donor..." rows="2" cols="30"></textarea>
+                                    <br>
+                                    <button type="submit">Submit Rating</button>
+                                </form>
                         {% endif %}
                     {% endif %}
                 </div>
