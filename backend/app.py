@@ -317,7 +317,7 @@ def nearby_posts():
         return jsonify({"error": "Invalid location or radius parameters."}), 400
 
     # THIS IS THE CORRECTED LINE
-    all_posts = FoodPost.query.filter(and_(FoodPost.status == 'available', FoodPost.approval_status == 'approved')).all()
+    all_posts = FoodPost.query.filter(status == 'available', approval_status == 'approved')).all()
     
     nearby_posts_data = []
 
