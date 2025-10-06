@@ -62,6 +62,7 @@
         {% if my_posts %}
             {% for post in my_posts %}
                 <div class="post-card">
+                    <img src="{{ post.image_url }}" alt="{{ post.food_name }}">
                     <h3>{{ post.food_name }}</h3>
                     <p>Status: <strong>{{ post.status.capitalize() }}</strong></p>
                     {% if post.status == 'available' %}
