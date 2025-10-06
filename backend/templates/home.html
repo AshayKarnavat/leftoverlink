@@ -1,4 +1,3 @@
-<!-- home.html -->
 {% extends "base.html" %}
 
 {% block title %}Home - Leftover Link{% endblock %}
@@ -16,12 +15,15 @@
                 <a href="{{ url_for('post_details', post_id=post.id) }}" class="post-card-link">
                     <div class="post-card">
                         <img src="{{ post.image_url }}" alt="{{ post.food_name }}">
-                        <h3>{{ post.food_name }}</h3>
-                        <p class="post-description">{{ post.description }}</p>
-                        <p><strong>Quantity:</strong> {{ post.quantity }}</p>
-                        <p><strong>Location:</strong> {{ post.city }}</p>
-                        <p class="posted-by">Posted by: <a href="{{ url_for('profile', username=post.author.username) }}" class="posted-by-anchor">{{ post.author.username }}</a></p>
-                    </div>
+                        
+                        <div class="card-body"> 
+                            <h3>{{ post.food_name }}</h3>
+                            <p class="post-description">{{ post.description }}</p>
+                            <p><strong>Quantity:</strong> {{ post.quantity }}</p>
+                            <p><strong>Location:</strong> {{ post.city }}</p>
+                            <p class="posted-by">Posted by: <a href="{{ url_for('profile', username=post.author.username) }}" class="posted-by-anchor">{{ post.author.username }}</a></p>
+                        </div>
+                        </div>
                 </a>
             {% endfor %}
         {% else %}
