@@ -176,6 +176,7 @@ a.post-card-link {
     margin-right:25px;
     margin-bottom:25px;
     width: 250px;
+    min-height:480px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     transition: transform 0.2s, box-shadow 0.2s;
     color: #FFFFFF;
